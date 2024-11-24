@@ -23,14 +23,5 @@ export class EmailController{
         }
     }
 
-    emailWithAttachment  = async (req : Request, res : Response) => {
-        try{
-            // await this.EmailService.sendEmailWithAttachment(req.body,)
-        }catch(ex){
-            console.log('Exception:',ex);
-            res.status(400).json({
-                message : ""
-            })
-        }
-    }
+    
 }

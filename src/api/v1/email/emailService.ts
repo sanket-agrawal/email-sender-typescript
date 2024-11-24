@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { config } from '../../../common/config';
-import { FileData } from '../../../common/fileStorage';
+import { FileData, FileStorage } from '../../../common/fileStorage';
 
 interface AttachmentOptions {
     filename: string;
@@ -19,6 +19,7 @@ interface EmailOptions{
 
 export class EmailService{
     private transporter : nodemailer.Transporter;
+    private fileStorage : FileStorage
 
     constructor(){
         this.transporter = nodemailer.createTransport({
@@ -27,7 +28,9 @@ export class EmailService{
                 user: config.smtp.user,
                 pass: config.smtp.pass,
             },
-        })
+        });
+
+        this.fileStorage = new FileStorage();
     }
 
     async sendEmail(options:EmailOptions) : Promise<void>{
@@ -45,22 +48,34 @@ export class EmailService{
 
     async sendEmailWithAttachment(
         options : EmailOptions,
-        fileData : FileData
+        attachmentType : String
     ) : Promise <void>{
-        const emailOptions = {
-            from: `Sanket Agrawal ${config.smtp.user}`,
-                ...options,
-                attachments: [
+        try{
+            const emailOptions = {
+                from: `Sanket Agrawal ${config.smtp.user}`,
+                    ...options
+            };
+
+            if(attachmentType === "resume"){
+                const fileData = this.fileStorage.getFile("Sanket Agrawal.pdf");
+                if (!fileData) {
+                    throw new Error('File not found!');
+                }
+    
+                emailOptions.attachments =  [
                     {
                         filename: fileData.filename,
                         content: Buffer.from(fileData.base64Data, 'base64'),
                         contentType: fileData.contentType,
                     },
-                ],
-        };
-
-        const result = await this.transporter.sendMail(emailOptions);
-        console.log('Email sent with attachment:', result.messageId);
+                ]
+            }
+            const result = await this.transporter.sendMail(emailOptions);
+            console.log('Email sent with attachment:', result.messageId);
+        }catch(error){
+            console.log(error);
+            throw new Error("Email Sending Failed with attachments");
+        }
     }
     
 }

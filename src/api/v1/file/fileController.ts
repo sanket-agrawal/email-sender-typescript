@@ -10,17 +10,25 @@ export const uploadFile = asyncHandler(async (req : Request, res : Response) => 
         return;
     }
 
-    const fileData = {
-        filename: req.file.originalname,
-        contentType: req.file.mimetype,
-        base64Data: req.file.buffer.toString('base64')
-    };
+    if(req.query.format === "resume"){
+        const fileData = {
+            filename: req.file.originalname,
+            contentType: req.file.mimetype,
+            base64Data: req.file.buffer.toString('base64')
+        };
+    
+        fileStorage.storeFile(fileData);
+    
+        res.status(200).json({
+            message: 'File uploaded successfully',
+            filename: fileData.filename
+        });
+    
+    }else{
+        res.status(400).json({
+            message: 'Please specify the file format in request query',
+        })
+    }
 
-    fileStorage.storeFile(fileData);
-
-    res.status(200).json({
-        message: 'File uploaded successfully',
-        filename: fileData.filename
-    });
-
+   
 })
