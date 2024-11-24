@@ -1,8 +1,8 @@
 import express from 'express';
-import v1Router from './v1/index';
- 
+import emailRoutes from './email/emailRouter';
+
 const router = express.Router();
 
-router.use('/v1',v1Router);
+router.use('/email',emailRoutes);
 
 export default router;
