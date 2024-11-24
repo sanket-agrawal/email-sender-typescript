@@ -1,11 +1,20 @@
 import nodemailer from 'nodemailer';
 import { config } from '../../../common/config';
+import { FileData } from '../../../common/fileStorage';
+
+interface AttachmentOptions {
+    filename: string;
+    content?: Buffer | string;
+    path?: string;
+    contentType?: string;
+}
 
 interface EmailOptions{
     to:string,
     subject:string,
     text?:string,
-    html:string
+    html:string,
+    attachments? : any[]
 }
 
 export class EmailService{
@@ -32,6 +41,26 @@ export class EmailService{
             console.log('Exception:',error);
             throw new Error("Failed to send email");
         }
+    }
+
+    async sendEmailWithAttachment(
+        options : EmailOptions,
+        fileData : FileData
+    ) : Promise <void>{
+        const emailOptions = {
+            from: `Sanket Agrawal ${config.smtp.user}`,
+                ...options,
+                attachments: [
+                    {
+                        filename: fileData.filename,
+                        content: Buffer.from(fileData.base64Data, 'base64'),
+                        contentType: fileData.contentType,
+                    },
+                ],
+        };
+
+        const result = await this.transporter.sendMail(emailOptions);
+        console.log('Email sent with attachment:', result.messageId);
     }
     
 }
