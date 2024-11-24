@@ -48,7 +48,7 @@ export class EmailService{
 
     async sendEmailWithAttachment(
         options : EmailOptions,
-        attachmentType : String
+        attachmentType : string
     ) : Promise <void>{
         try{
             const emailOptions = {
