@@ -41,9 +41,8 @@ export class SenderController {
       for(const data of formattedData){
         await this.emailService.sendEmailWithAttachment({
             html : jobApplicationEmailTemplate({
-                recruiterName : data.Name.split(" ")[0],
-                candidateName : config.candidateInfo.name,
-                contactInformation : config.candidateInfo.contact
+                recruiterName : data.Name.split(" ")[0]
+
             }),
             subject : config.mailSubjects.jobApplications,
             to : data.Email

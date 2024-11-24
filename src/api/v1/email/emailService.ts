@@ -64,7 +64,7 @@ export class EmailService{
     
                 emailOptions.attachments =  [
                     {
-                        filename: fileData.filename,
+                        filename: "resume.pdf",
                         content: Buffer.from(fileData.base64Data, 'base64'),
                         contentType: fileData.contentType,
                     },

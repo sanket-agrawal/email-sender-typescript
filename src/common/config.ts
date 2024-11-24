@@ -11,7 +11,9 @@ const envSchema = Joi.object().keys({
     SMTP_PASS : Joi.string().required(),
     CANDIDATE_NAME : Joi.string().required(),
     DEFAULT_POSITION : Joi.string().required(),
-    JOB_APPLICATION_SUBJECT : Joi.string().required()
+    JOB_APPLICATION_SUBJECT : Joi.string().required(),
+    CANDIDATE_GIT : Joi.string().required(),
+    CANDIDATE_LINKEDIN : Joi.string().required()
 }).unknown();
 
 const { value : envVars, error} = envSchema.validate(process.env);
@@ -32,7 +34,9 @@ export const config = {
     candidateInfo : {
       name : envVars.CANDIDATE_NAME,
       email : envVars.CANDIDATE_EMAIL,
-      contact : envVars.CANDIDATE_PHONE
+      contact : envVars.CANDIDATE_PHONE,
+      gitHub : envVars.CANDIDATE_GIT,
+      linkedin : envVars.CANDIDATE_LINKEDIN
     },
     defaultPosition : envVars.DEFAULT_POSITION,
     mailSubjects : {
