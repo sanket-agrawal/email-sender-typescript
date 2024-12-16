@@ -13,7 +13,8 @@ const envSchema = Joi.object().keys({
     DEFAULT_POSITION : Joi.string().required(),
     JOB_APPLICATION_SUBJECT : Joi.string().required(),
     CANDIDATE_GIT : Joi.string().required(),
-    CANDIDATE_LINKEDIN : Joi.string().required()
+    CANDIDATE_LINKEDIN : Joi.string().required(),
+    MONGO_URI : Joi.string().required()
 }).unknown();
 
 const { value : envVars, error} = envSchema.validate(process.env);
@@ -41,5 +42,8 @@ export const config = {
     defaultPosition : envVars.DEFAULT_POSITION,
     mailSubjects : {
       jobApplications : envVars.JOB_APPLICATION_SUBJECT
+    },
+    mongo : {
+      connectionString : envVars.MONGO_URI
     }
   };
