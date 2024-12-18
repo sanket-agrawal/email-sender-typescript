@@ -3,12 +3,15 @@ import { Request, Response } from 'express';
 import { EmailService } from "../email/emailService";
 import { jobApplicationEmailTemplate } from './emailTemplate';
 import { config } from '../../../common/config';
+import { UserService } from '../user/user.service';
 
 export class SenderController {
   private emailService: EmailService;
+  private userService : UserService;
 
   constructor() {
     this.emailService = new EmailService();
+    this.userService = new UserService();
   }
 
   sender = async (req: Request, res: Response): Promise<void> => {
@@ -48,6 +51,17 @@ export class SenderController {
             to : data.Email
         },"resume");
         sentEmails++;
+        const userData = {
+          fname : data.Name.split(" ")[0],
+          lname : data.Name.split(" ")[1] ? data.Name.split(" ")[1] : " ",
+          email : data.Email,
+          company : data.Company,
+          isActive : true,
+          isDeleted : false,
+          isMailed : true,
+          isFollowedUp : false
+        }
+        await this.userService.createUser(userData);
         console.log(`${sentEmails} mails sent from ${totalEmails}`)
 
       }
